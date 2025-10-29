@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editar Nota</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>Editar Nota</h1>
+
+<form th:action="@{'/edit-note/' + ${note.id}}" th:object="${note}" method="post">
+    <label for="title">Título:</label>
+    <input type="text" id="title" th:field="*{title}" /><br><br>
+
+    <label for="content">Contenido:</label>
+    <textarea id="content" th:field="*{content}"></textarea><br><br>
+
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+<p><a th:href="@{/list-notes}">Volver a la lista de notas</a></p>
+</body>
+</html>
