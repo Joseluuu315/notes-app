@@ -1,26 +1,37 @@
 package com.joseluu.notesapp.model;
 
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
+
+@Entity
 public class Notes {
-    private String title, content;
-    private Date createDate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String content;
+    private LocalDate createdAt;
+    private HttpStatus status;
 
-    public Notes(String title, String content, Date createDate) {
-        this.title = title;
-        this.content = content;
-        this.createDate = createDate;
+    public LocalDate getCreatedAt() {
+        return createdAt;
     }
 
-    public Notes() {
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public String getTitle() {
-        return title;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public Long getId() {
+        return id;
     }
 
     public String getContent() {
@@ -31,11 +42,19 @@ public class Notes {
         this.content = content;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public String getTitle() {
+        return title;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
     }
 }

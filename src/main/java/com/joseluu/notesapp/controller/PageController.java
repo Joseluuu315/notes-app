@@ -46,7 +46,7 @@ public class PageController {
 
         for (Notes note : notes) {
             if (note.getContent().contains("importante")){
-                model.addAttribute("notes", notes);
+                model.addAttribute("importantNotes", notes);
             }
         }
 
@@ -79,7 +79,7 @@ public class PageController {
     @GetMapping("/edit-note/{id}")
     public String showEditNoteForm(@PathVariable Long id, Model model) {
         Notes note = noteRepository.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException(id)); // Reutiliza el 404
+                .orElseThrow(() -> new NoteNotFoundException(id));
         model.addAttribute("note", note);
         return "edit_note";
     }
@@ -94,9 +94,6 @@ public class PageController {
         Notes existingNote = noteRepository.findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
 
-        if ("CONFLICTO".equalsIgnoreCase(existingNote.getContent())) {
-            throw new ConcurrencyConflictException("Nota ID " + id);
-        }
 
 
         existingNote.setTitle(note.getTitle());
