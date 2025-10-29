@@ -11,38 +11,42 @@ import java.util.List;
 
 @Service
 public class NoteService {
-    private final NoteRepository noteRepository;
+
     @Autowired
-    public NoteService(NoteRepository noteRepository) {
-        this.noteRepository = noteRepository;
-    }
-    public List<Notes> findAll() {
+    private NoteRepository noteRepository;
+
+    public List<Notes> getAllNotes() {
         return noteRepository.findAll();
     }
-    public Notes findById(Long id) {
+
+    public Notes createNote(Notes note) {
+        return noteRepository.save(note);
+    }
+
+    public Notes getNoteById(Long id) {
         return noteRepository.findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
     }
-    public Notes save(Notes note) {
-        return noteRepository.save(note);
-    }
-    public void deleteById(Long id) {
+
+    public void deleteNoteById(Long id) {
         if (!noteRepository.existsById(id)) {
             throw new NoteNotFoundException(id);
         }
         noteRepository.deleteById(id);
     }
-    public Notes update(Long id, Notes noteDetails) {
-        Notes existingNote = findById(id);
+
+    public Notes updateNote(Long id, Notes noteDetails) {
+        Notes note = noteRepository.findById(id)
+                .orElseThrow(() -> new NoteNotFoundException(id));
 
         if ("CONFLICTO".equalsIgnoreCase(noteDetails.getContent())) {
             throw new ConcurrencyConflictException("Nota ID " + id);
         }
 
-        existingNote.setTitle(noteDetails.getTitle());
-        existingNote.setContent(noteDetails.getContent());
+        note.setTitle(noteDetails.getTitle());
+        note.setContent(noteDetails.getContent());
 
-        return noteRepository.save(existingNote);
+        return noteRepository.save(note);
     }
 
 
