@@ -4,7 +4,6 @@ import com.joseluu.notesapp.model.Notes;
 import com.joseluu.notesapp.exception.ConcurrencyConflictException;
 import com.joseluu.notesapp.exception.NoteNotFoundException;
 import com.joseluu.notesapp.repository.NoteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,11 @@ import java.util.List;
 @Service
 public class NoteService {
 
-    @Autowired
-    private NoteRepository noteRepository;
+    private final NoteRepository noteRepository;
+
+    public NoteService(NoteRepository noteRepository) {
+        this.noteRepository = noteRepository;
+    }
 
     public List<Notes> findAll() {
         return noteRepository.findAll();

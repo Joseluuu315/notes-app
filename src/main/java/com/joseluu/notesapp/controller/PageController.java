@@ -16,6 +16,7 @@ import java.util.List;
 
 @Controller
 public class PageController {
+    @Autowired
     private final NoteRepository noteRepository;
     private final NoteService noteService;
 
