@@ -1,29 +1,30 @@
 package com.joseluu.notesapp.controller;
 
-import java.util.List;
-
 import com.joseluu.notesapp.model.Notes;
-import com.joseluu.notesapp.exception.ConcurrencyConflictException;
-import com.joseluu.notesapp.exception.NoteNotFoundException;
 import com.joseluu.notesapp.repository.NoteRepository;
-import org.springframework.beans.factory.annotation.Autowired; 
+import com.joseluu.notesapp.service.NoteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class PageController {
+    private final NoteRepository noteRepository;
+    private final NoteService noteService;
 
-    @Autowired
-    private NoteRepository noteRepository;
+    public PageController(NoteRepository noteRepository, NoteService noteService) {
+        this.noteRepository = noteRepository;
+        this.noteService = noteService;
+    }
 
-    @GetMapping("/menu")
+    @GetMapping("/")
     public String showMenu() {
         return "menu";
     }
@@ -34,73 +35,67 @@ public class PageController {
         return "new_note";
     }
 
+    @PostMapping("/create-note")
+    public String createNote(@Validated Notes note, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "new_note";
+        }
+
+        noteService.saveNotes(note);
+        return "redirect:/list-notes";  // redirige a /list-notes tras guardar
+    }
+
     @GetMapping("/list-notes")
     public String showAllNotes(Model model) {
-        List<Notes> notes = noteRepository.findAll();
+        List<Notes> notes = noteService.findAll();
         model.addAttribute("notes", notes);
+
         return "list_notes";
     }
     @GetMapping("/list-notes-important")
-    public String showImportantNote(Model model) {
-        List<Notes> notes = noteRepository.findAll();
+    public String showAllNotesImportant(Model model) {
+        List<Notes> notes = noteService.findAll();
+        List<Notes> importantNotes = new ArrayList<>();
+
 
         for (Notes note : notes) {
-            if (note.getContent().contains("importante")){
-                model.addAttribute("importantNotes", notes);
+            if (note.getContent().contains("Importante") || note.getTitle().contains("Importante")) {
+                importantNotes.add(note);
+                note.setStatus(HttpStatus.ACCEPTED);
             }
         }
 
+        model.addAttribute("importantNotes", importantNotes);
+
+
         return "list_notes_important";
     }
+
+    @GetMapping("/edit-note/{id}")
+    public String showEditNoteForm(@PathVariable("id") Long id, Model model) {
+        Notes note = noteService.findById(id);
+
+        model.addAttribute("note", note); // IMPORTANTE: "note" es el mismo nombre usado en el HTML
+        return "edit_note";
+    }
+
+    // Procesar formulario de edición
+    @PostMapping("/edit-note/{id}")
+    public String updateNote(@PathVariable("id") Long id, Notes noteDetails) {
+        Notes note = noteService.findById(id);
+
+        note.setTitle(noteDetails.getTitle());
+        note.setContent(noteDetails.getContent());
+
+        noteRepository.save(note);
+
+        return "redirect:/list_notes";
+    }
+
 
     @GetMapping("/delete-note")
     public String showDeleteNotePage() {
         return "delete_notes";
     }
-
-    @PostMapping("/notes-form")
-    public String createNote(@Validated Notes note, BindingResult br, Model model) {
-        if (br.hasErrors()) {
-            model.addAttribute("note", note);
-            return "new_note";
-        }
-        noteRepository.save(note);
-        return "redirect:/list_notes";
-    }
-
-
-    @GetMapping("/test-500")
-    public String triggerInternalError() {
-        String s = null;
-        s.length();
-        return "menu";
-    }
-
-    @GetMapping("/edit-note/{id}")
-    public String showEditNoteForm(@PathVariable Long id, Model model) {
-        Notes note = noteRepository.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException(id));
-        model.addAttribute("note", note);
-        return "edit_note";
-    }
-
-    @PutMapping("/edit-note/{id}")
-    public String updateNoteMvc(@PathVariable Long id, @Validated Notes note, BindingResult br, Model model) {
-        if (br.hasErrors()) {
-            model.addAttribute("note", note);
-            return "edit_note";
-        }
-
-        Notes existingNote = noteRepository.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException(id));
-
-
-
-        existingNote.setTitle(note.getTitle());
-        existingNote.setContent(note.getContent());
-        noteRepository.save(existingNote);
-        return "redirect:/list_notes";
-
-    }
-
 }

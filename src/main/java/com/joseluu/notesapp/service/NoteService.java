@@ -15,13 +15,24 @@ public class NoteService {
     @Autowired
     private NoteRepository noteRepository;
 
+    public List<Notes> findAll() {
+        return noteRepository.findAll();
+    }
+
+    public Notes findById(Long id) {
+        return noteRepository.findById(id).orElseThrow(()
+                -> new NoteNotFoundException(id));
+    }
+
     public List<Notes> getAllNotes() {
         return noteRepository.findAll();
     }
 
-    public Notes createNote(Notes note) {
+    public Notes saveNotes(Notes note) {
         return noteRepository.save(note);
     }
+
+
 
     public Notes getNoteById(Long id) {
         return noteRepository.findById(id)
@@ -48,6 +59,4 @@ public class NoteService {
 
         return noteRepository.save(note);
     }
-
-
 }

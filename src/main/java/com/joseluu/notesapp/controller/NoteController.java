@@ -13,8 +13,12 @@ import java.util.List;
 @RequestMapping("/api/notes")
 public class NoteController {
 
-    @Autowired
-    private NoteService noteService;
+    private final NoteService noteService;
+
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
+    }
+
 
     @GetMapping
     public List<Notes> getAllNotes() {
@@ -23,7 +27,7 @@ public class NoteController {
 
     @PostMapping
     public Notes createNote(@RequestBody Notes note) {
-        return noteService.createNote(note);
+        return noteService.saveNotes(note);
     }
 
     @GetMapping("/{id}")
