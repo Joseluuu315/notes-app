@@ -24,6 +24,7 @@ public class PageController {
         this.noteService = noteService;
     }
 
+
     @GetMapping("/")
     public String showMenu() {
         return "menu";
