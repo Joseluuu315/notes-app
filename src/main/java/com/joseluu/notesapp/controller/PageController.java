@@ -13,7 +13,6 @@ import java.util.List;
 
 @Controller
 public class PageController {
-    @Autowired
     private final NoteService noteService;
 
     public PageController(NoteService noteService) {
