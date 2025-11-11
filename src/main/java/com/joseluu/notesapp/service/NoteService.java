@@ -21,6 +21,13 @@ public class NoteService {
         return noteRepository.findAll();
     }
 
+    public List<Notes> findByTitleKeyword(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return noteRepository.findAll();
+        }
+        return noteRepository.findByTitleContainingIgnoreCase(keyword);
+    }
+
     public Notes findById(Long id) {
         return noteRepository.findById(id).orElseThrow(()
                 -> new NoteNotFoundException(id));

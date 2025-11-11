@@ -55,6 +55,15 @@ public class PageController {
 
         return "list_notes";
     }
+
+    @GetMapping("/list-notes-search")
+    public String showAllNotes(@RequestParam(required = false) String keyword, Model model) {
+        List<Notes> notes = noteService.findByTitleKeyword(keyword);
+        model.addAttribute("notes", notes);
+        model.addAttribute("totalNotes", notes.size());
+        model.addAttribute("keyword", keyword); // por si quieres mostrarlo en el HTML
+        return "list_notes_search";
+    }
     @GetMapping("/list-notes-important")
     public String showAllNotesImportant(Model model) {
         List<Notes> notes = noteService.findAll();
