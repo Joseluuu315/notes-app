@@ -35,7 +35,7 @@ public class NoteController {
         return noteService.findById(id);
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public List<Notes> findNoteByTitle(@RequestParam String title) {
         return noteService.findByTitleKeyword(title);
     }

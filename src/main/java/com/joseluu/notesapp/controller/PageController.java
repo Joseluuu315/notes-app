@@ -24,6 +24,11 @@ public class PageController {
         return "menu";
     }
 
+    @GetMapping("/error-500")
+    public String error500() {
+        throw new RuntimeException("Error simulado");
+    }
+
     @GetMapping("/new-note")
     public String showNewNoteForm(Model model) {
         model.addAttribute("note", new Notes());
