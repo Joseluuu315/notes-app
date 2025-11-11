@@ -37,9 +37,6 @@ public class NoteController {
 
     @GetMapping
     public List<Notes> findNoteByTitle(@RequestParam String title) {
-        if (title == null || title.isEmpty()) {
-            return noteService.findAll();
-        }
         return noteService.findByTitleKeyword(title);
     }
 
