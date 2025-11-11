@@ -35,6 +35,14 @@ public class NoteController {
         return noteService.getNoteById(id);
     }
 
+    @GetMapping
+    public List<Notes> findNoteByTitle(@RequestParam String title) {
+        if (title == null || title.isEmpty()) {
+            return noteService.findAll();
+        }
+        return noteService.findByTitleKeyword(title);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNoteById(@PathVariable Long id) {
         noteService.deleteNoteById(id);

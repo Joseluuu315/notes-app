@@ -38,14 +38,11 @@ public class NoteService {
     }
 
     public Notes saveNotes(Notes note) {
+        if ("DUPLICADO".equalsIgnoreCase(note.getContent())) {
+            throw new ConcurrencyConflictException("Nota ID " + note.getId());
+        }
+
         return noteRepository.save(note);
-    }
-
-
-
-    public Notes getNoteById(Long id) {
-        return noteRepository.findById(id)
-                .orElseThrow(() -> new NoteNotFoundException(id));
     }
 
     public void deleteNoteById(Long id) {

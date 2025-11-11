@@ -17,11 +17,9 @@ import java.util.List;
 @Controller
 public class PageController {
     @Autowired
-    private final NoteRepository noteRepository;
     private final NoteService noteService;
 
-    public PageController(NoteRepository noteRepository, NoteService noteService) {
-        this.noteRepository = noteRepository;
+    public PageController(NoteService noteService) {
         this.noteService = noteService;
     }
 
@@ -61,7 +59,7 @@ public class PageController {
         List<Notes> notes = noteService.findByTitleKeyword(keyword);
         model.addAttribute("notes", notes);
         model.addAttribute("totalNotes", notes.size());
-        model.addAttribute("keyword", keyword); // por si quieres mostrarlo en el HTML
+        model.addAttribute("keyword", keyword);
         return "list_notes_search";
     }
     @GetMapping("/list-notes-important")
@@ -96,10 +94,8 @@ public class PageController {
     public String updateNote(@PathVariable("id") Long id, Notes noteDetails) {
         Notes note = noteService.findById(id);
 
-        note.setTitle(noteDetails.getTitle());
-        note.setContent(noteDetails.getContent());
+        noteService.updateNote(id, noteDetails);
 
-        noteRepository.save(note);
 
         return "redirect:/list_notes";
     }
