@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -50,7 +51,9 @@ public class PageController {
     public String showAllNotes(Model model) {
         List<Notes> notes = noteService.findAll();
 
+        noteService.orderByDate();
         model.addAttribute("notes", notes);
+        model.addAttribute("totalNotes", notes.size());
 
         return "list_notes";
     }

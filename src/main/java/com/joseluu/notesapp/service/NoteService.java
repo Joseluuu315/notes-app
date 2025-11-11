@@ -7,6 +7,7 @@ import com.joseluu.notesapp.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -132,5 +133,18 @@ public class NoteService {
         note.setContent(noteDetails.getContent());
 
         return noteRepository.save(note);
+    }
+
+    public List<Notes> orderByDate(){
+        List<Notes> notes = noteRepository.findAll();
+
+        notes.sort(new Comparator<Notes>() {
+            @Override
+            public int compare(Notes o1, Notes o2) {
+
+                return o1.getCreatedAt().compareTo(o2.getCreatedAt());
+            }
+        });
+        return notes;
     }
 }
