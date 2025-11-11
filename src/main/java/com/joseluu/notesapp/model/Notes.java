@@ -1,9 +1,7 @@
 package com.joseluu.notesapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Check;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
@@ -13,6 +11,7 @@ public class Notes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Check(constraints = "LENGTH(title) >= 3")
     private String title;
     private String content;
     private LocalDate createdAt;
