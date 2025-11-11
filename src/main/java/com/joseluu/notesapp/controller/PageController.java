@@ -87,12 +87,21 @@ public class PageController {
     }
 
     @PostMapping("/edit-note/{id}")
-    public String updateNote(@PathVariable("id") Long id, Notes noteDetails) {
+    public String updateNote(@PathVariable("id") Long id) {
         Notes note = noteService.findById(id);
 
-        noteService.updateNote(id, noteDetails);
+        noteService.updateNote(id, note);
 
         return "redirect:/list_notes";
+    }
+
+    @GetMapping("/delete-note-in-list/{id}")
+    public String deleteNoteInList(@PathVariable("id") Long id) {
+        Notes note = noteService.findById(id);
+
+        noteService.deleteNoteById(id);
+
+        return "redirect:/list-notes";
     }
 
     @GetMapping("/delete-note")

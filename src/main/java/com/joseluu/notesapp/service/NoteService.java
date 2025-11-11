@@ -135,7 +135,7 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    public List<Notes> orderByDate(){
+    public void orderByDate(){
         List<Notes> notes = noteRepository.findAll();
 
         notes.sort(new Comparator<Notes>() {
@@ -145,6 +145,5 @@ public class NoteService {
                 return o1.getCreatedAt().compareTo(o2.getCreatedAt());
             }
         });
-        return notes;
     }
 }

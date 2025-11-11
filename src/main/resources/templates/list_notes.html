@@ -24,6 +24,7 @@
             <td th:text="${note.content}"></td>
             <td th:text="${note.createdAt}"></td>
             <td> <a th:href="@{'/edit-note/' + ${note.id}}">Editar</a>
+            <td> <a th:href="@{'/delete-note-in-list/' + ${note.id}}">Borrar</a>
             </td>
         </tr>
         </tbody>
