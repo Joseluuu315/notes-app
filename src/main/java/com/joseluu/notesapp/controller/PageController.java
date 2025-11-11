@@ -1,17 +1,14 @@
 package com.joseluu.notesapp.controller;
 
 import com.joseluu.notesapp.model.Notes;
-import com.joseluu.notesapp.repository.NoteRepository;
 import com.joseluu.notesapp.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -22,7 +19,6 @@ public class PageController {
     public PageController(NoteService noteService) {
         this.noteService = noteService;
     }
-
 
     @GetMapping("/")
     public String showMenu() {
@@ -49,6 +45,7 @@ public class PageController {
     @GetMapping("/list-notes")
     public String showAllNotes(Model model) {
         List<Notes> notes = noteService.findAll();
+
         model.addAttribute("notes", notes);
 
         return "list_notes";
@@ -57,11 +54,14 @@ public class PageController {
     @GetMapping("/list-notes-search")
     public String showAllNotes(@RequestParam(required = false) String keyword, Model model) {
         List<Notes> notes = noteService.findByTitleKeyword(keyword);
+
         model.addAttribute("notes", notes);
         model.addAttribute("totalNotes", notes.size());
         model.addAttribute("keyword", keyword);
+
         return "list_notes_search";
     }
+
     @GetMapping("/list-notes-important")
     public String showAllNotesImportant(Model model) {
         List<Notes> notes = noteService.findAllByContent("important");
@@ -87,7 +87,6 @@ public class PageController {
 
         return "redirect:/list_notes";
     }
-
 
     @GetMapping("/delete-note")
     public String showDeleteNotePage() {
