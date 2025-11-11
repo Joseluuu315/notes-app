@@ -6,6 +6,7 @@ import com.joseluu.notesapp.exception.NoteNotFoundException;
 import com.joseluu.notesapp.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +22,19 @@ public class NoteService {
         return noteRepository.findAll();
     }
 
+    public List<Notes> findAllByContent(String content) {
+        List<Notes> notes = noteRepository.findAll();
+        List<Notes> filteredNotes = new ArrayList<>();
+
+        for (Notes note : notes) {
+            if (note.getContent().contains(content)) {
+                filteredNotes.add(note);
+            }
+        }
+
+        return filteredNotes;
+    }
+
     public List<Notes> findByTitleKeyword(String keyword) {
         if (keyword == null || keyword.isEmpty()) {
             return noteRepository.findAll();
@@ -31,10 +45,6 @@ public class NoteService {
     public Notes findById(Long id) {
         return noteRepository.findById(id).orElseThrow(()
                 -> new NoteNotFoundException(id));
-    }
-
-    public List<Notes> getAllNotes() {
-        return noteRepository.findAll();
     }
 
     public Notes saveNotes(Notes note) {

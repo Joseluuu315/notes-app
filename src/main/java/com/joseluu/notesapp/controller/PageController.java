@@ -64,19 +64,9 @@ public class PageController {
     }
     @GetMapping("/list-notes-important")
     public String showAllNotesImportant(Model model) {
-        List<Notes> notes = noteService.findAll();
-        List<Notes> importantNotes = new ArrayList<>();
+        List<Notes> notes = noteService.findAllByContent("important");
 
-
-        for (Notes note : notes) {
-            if (note.getContent().contains("Importante") || note.getTitle().contains("Importante")) {
-                importantNotes.add(note);
-                note.setStatus(HttpStatus.ACCEPTED);
-            }
-        }
-
-        model.addAttribute("importantNotes", importantNotes);
-
+        model.addAttribute("importantNotes", notes);
 
         return "list_notes_important";
     }
@@ -85,17 +75,15 @@ public class PageController {
     public String showEditNoteForm(@PathVariable("id") Long id, Model model) {
         Notes note = noteService.findById(id);
 
-        model.addAttribute("note", note); // IMPORTANTE: "note" es el mismo nombre usado en el HTML
+        model.addAttribute("note", note);
         return "edit_note";
     }
 
-    // Procesar formulario de edición
     @PostMapping("/edit-note/{id}")
     public String updateNote(@PathVariable("id") Long id, Notes noteDetails) {
         Notes note = noteService.findById(id);
 
         noteService.updateNote(id, noteDetails);
-
 
         return "redirect:/list_notes";
     }

@@ -22,7 +22,7 @@ public class NoteController {
 
     @GetMapping
     public List<Notes> getAllNotes() {
-        return noteService.getAllNotes();
+        return noteService.findAll();
     }
 
     @PostMapping
@@ -32,7 +32,7 @@ public class NoteController {
 
     @GetMapping("/{id}")
     public Notes getNoteById(@PathVariable Long id) {
-        return noteService.getNoteById(id);
+        return noteService.findById(id);
     }
 
     @GetMapping
