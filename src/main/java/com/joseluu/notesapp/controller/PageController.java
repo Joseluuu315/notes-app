@@ -1,15 +1,13 @@
 package com.joseluu.notesapp.controller;
 
-import com.joseluu.notesapp.model.Notes;
+import com.joseluu.notesapp.model.NotesEntity;
 import com.joseluu.notesapp.service.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -32,12 +30,12 @@ public class PageController {
 
     @GetMapping("/new-note")
     public String showNewNoteForm(Model model) {
-        model.addAttribute("note", new Notes());
+        model.addAttribute("note", new NotesEntity());
         return "new_note";
     }
 
     @PostMapping("/create-note")
-    public String createNote(@Validated Notes note, BindingResult bindingResult, Model model) {
+    public String createNote(@Validated NotesEntity note, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             return "new_note";
@@ -49,18 +47,19 @@ public class PageController {
 
     @GetMapping("/list-notes")
     public String showAllNotes(Model model) {
-        List<Notes> notes = noteService.findAll();
+        List<NotesEntity> notes = noteService.findAll();
 
-        noteService.orderByDate();
+        noteService.orderByDate(notes);
         model.addAttribute("notes", notes);
         model.addAttribute("totalNotes", notes.size());
+        model.addAttribute("categoria");
 
         return "list_notes";
     }
 
     @GetMapping("/list-notes-search")
     public String showAllNotes(@RequestParam(required = false) String keyword, Model model) {
-        List<Notes> notes = noteService.findByTitleKeyword(keyword);
+        List<NotesEntity> notes = noteService.findByTitleKeyword(keyword);
 
         model.addAttribute("notes", notes);
         model.addAttribute("totalNotes", notes.size());
@@ -71,7 +70,7 @@ public class PageController {
 
     @GetMapping("/list-notes-important")
     public String showAllNotesImportant(Model model) {
-        List<Notes> notes = noteService.findAllByContent("important");
+        List<NotesEntity> notes = noteService.findAllByContent("important");
 
         model.addAttribute("importantNotes", notes);
 
@@ -80,7 +79,7 @@ public class PageController {
 
     @GetMapping("/edit-note/{id}")
     public String showEditNoteForm(@PathVariable("id") Long id, Model model) {
-        Notes note = noteService.findById(id);
+        NotesEntity note = noteService.findById(id);
 
         model.addAttribute("note", note);
         return "edit_note";
@@ -88,7 +87,7 @@ public class PageController {
 
     @PostMapping("/edit-note/{id}")
     public String updateNote(@PathVariable("id") Long id) {
-        Notes note = noteService.findById(id);
+        NotesEntity note = noteService.findById(id);
 
         noteService.updateNote(id, note);
 
@@ -97,7 +96,7 @@ public class PageController {
 
     @GetMapping("/delete-note-in-list/{id}")
     public String deleteNoteInList(@PathVariable("id") Long id) {
-        Notes note = noteService.findById(id);
+        NotesEntity note = noteService.findById(id);
 
         noteService.deleteNoteById(id);
 

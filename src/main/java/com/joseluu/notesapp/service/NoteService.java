@@ -1,6 +1,6 @@
 package com.joseluu.notesapp.service;
 
-import com.joseluu.notesapp.model.Notes;
+import com.joseluu.notesapp.model.NotesEntity;
 import com.joseluu.notesapp.exception.ConcurrencyConflictException;
 import com.joseluu.notesapp.exception.NoteNotFoundException;
 import com.joseluu.notesapp.repository.NoteRepository;
@@ -22,7 +22,7 @@ public class NoteService {
     /**
      * Constructor para inyectar la dependencia del repositorio.
      *
-     * @param noteRepository el repositorio que gestiona las entidades de tipo {@link Notes}.
+     * @param noteRepository el repositorio que gestiona las entidades de tipo {@link NotesEntity}.
      */
     public NoteService(NoteRepository noteRepository) {
         this.noteRepository = noteRepository;
@@ -33,7 +33,7 @@ public class NoteService {
      *
      * @return una lista de todas las notas.
      */
-    public List<Notes> findAll() {
+    public List<NotesEntity> findAll() {
         return noteRepository.findAll();
     }
 
@@ -44,11 +44,11 @@ public class NoteService {
      * @param content texto que se buscará dentro del contenido de las notas.
      * @return lista de notas cuyo contenido incluye el texto indicado.
      */
-    public List<Notes> findAllByContent(String content) {
-        List<Notes> notes = noteRepository.findAll();
-        List<Notes> filteredNotes = new ArrayList<>();
+    public List<NotesEntity> findAllByContent(String content) {
+        List<NotesEntity> notes = noteRepository.findAll();
+        List<NotesEntity> filteredNotes = new ArrayList<>();
 
-        for (Notes note : notes) {
+        for (NotesEntity note : notes) {
             if (note.getContent().contains(content)) {
                 filteredNotes.add(note);
             }
@@ -63,7 +63,7 @@ public class NoteService {
      * @param keyword palabra clave a buscar en el título.
      * @return lista de notas que coinciden con la palabra clave o todas las notas si el parámetro es nulo o vacío.
      */
-    public List<Notes> findByTitleKeyword(String keyword) {
+    public List<NotesEntity> findByTitleKeyword(String keyword) {
         if (keyword == null || keyword.isEmpty()) {
             return noteRepository.findAll();
         }
@@ -77,7 +77,7 @@ public class NoteService {
      * @return la nota encontrada.
      * @throws NoteNotFoundException si no se encuentra una nota con el ID indicado.
      */
-    public Notes findById(Long id) {
+    public NotesEntity findById(Long id) {
         return noteRepository.findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
     }
@@ -90,7 +90,7 @@ public class NoteService {
      * @return la nota guardada.
      * @throws ConcurrencyConflictException si el contenido es "DUPLICADO".
      */
-    public Notes saveNotes(Notes note) {
+    public NotesEntity saveNotes(NotesEntity note) {
         if ("DUPLICADO".equalsIgnoreCase(note.getContent())) {
             throw new ConcurrencyConflictException("Nota ID " + note.getId());
         }
@@ -116,13 +116,13 @@ public class NoteService {
      * Lanza una excepción si el nuevo contenido es "CONFLICTO".
      *
      * @param id           identificador de la nota a actualizar.
-     * @param noteDetails  objeto {@link Notes} con los nuevos datos.
+     * @param noteDetails  objeto {@link NotesEntity} con los nuevos datos.
      * @return la nota actualizada.
      * @throws NoteNotFoundException       si la nota no existe.
      * @throws ConcurrencyConflictException si el contenido es "CONFLICTO".
      */
-    public Notes updateNote(Long id, Notes noteDetails) {
-        Notes note = noteRepository.findById(id)
+    public NotesEntity updateNote(Long id, NotesEntity noteDetails) {
+        NotesEntity note = noteRepository.findById(id)
                 .orElseThrow(() -> new NoteNotFoundException(id));
 
         if ("CONFLICTO".equalsIgnoreCase(noteDetails.getContent())) {
@@ -135,12 +135,14 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    public void orderByDate(){
-        List<Notes> notes = noteRepository.findAll();
+    public void orderByDate(List<NotesEntity> notes) {
 
-        notes.sort(new Comparator<Notes>() {
+        notes.sort(new Comparator<NotesEntity>() {
             @Override
-            public int compare(Notes o1, Notes o2) {
+            public int compare(NotesEntity o1, NotesEntity o2) {
+                if (o1.getCreatedAt() == null || o2.getCreatedAt() == null) {
+                    return 0;
+                }
 
                 return o1.getCreatedAt().compareTo(o2.getCreatedAt());
             }
