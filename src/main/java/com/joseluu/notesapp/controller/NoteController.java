@@ -1,8 +1,7 @@
 package com.joseluu.notesapp.controller;
 
-import com.joseluu.notesapp.model.Notes;
+import com.joseluu.notesapp.model.NotesEntity;
 import com.joseluu.notesapp.service.NoteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,22 +20,22 @@ public class NoteController {
 
 
     @GetMapping
-    public List<Notes> getAllNotes() {
+    public List<NotesEntity> getAllNotes() {
         return noteService.findAll();
     }
 
     @PostMapping
-    public Notes createNote(@RequestBody Notes note) {
+    public NotesEntity createNote(@RequestBody NotesEntity note) {
         return noteService.saveNotes(note);
     }
 
     @GetMapping("/{id}")
-    public Notes getNoteById(@PathVariable Long id) {
+    public NotesEntity getNoteById(@PathVariable Long id) {
         return noteService.findById(id);
     }
 
     @GetMapping("/search")
-    public List<Notes> findNoteByTitle(@RequestParam String title) {
+    public List<NotesEntity> findNoteByTitle(@RequestParam String title) {
         return noteService.findByTitleKeyword(title);
     }
 
@@ -47,7 +46,7 @@ public class NoteController {
     }
 
     @PutMapping("/{id}")
-    public Notes updateNote(@PathVariable Long id, @Validated @RequestBody Notes noteDetails) {
+    public NotesEntity updateNote(@PathVariable Long id, @Validated @RequestBody NotesEntity noteDetails) {
         return noteService.updateNote(id, noteDetails);
     }
 }

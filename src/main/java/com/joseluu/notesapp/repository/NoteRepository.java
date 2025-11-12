@@ -1,12 +1,12 @@
 package com.joseluu.notesapp.repository;
 
-import com.joseluu.notesapp.model.Notes;
+import com.joseluu.notesapp.model.NotesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface NoteRepository extends JpaRepository<Notes, Long> {
+public interface NoteRepository extends JpaRepository<NotesEntity, Long> {
 
-    List<Notes> findByTitleContainingIgnoreCase(String keyword);
+    List<NotesEntity> findByTitleContainingIgnoreCase(String keyword);
 
 }

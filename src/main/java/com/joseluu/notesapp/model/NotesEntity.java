@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDate;
 
 @Entity
-public class Notes {
+public class NotesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,6 +16,20 @@ public class Notes {
     private String content;
     private LocalDate createdAt;
     private HttpStatus status;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
+
+
+
+
+    public CategoryEntity getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
+    }
 
     public LocalDate getCreatedAt() {
         return createdAt;

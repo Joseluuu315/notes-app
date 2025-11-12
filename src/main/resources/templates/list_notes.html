@@ -8,27 +8,34 @@
     <h1>Lista de Notas</h1>
     <h2>Numero de notas totales: </h2>
     <h2 th:text="${totalNotes}"></h2>
-    <table border="1"> <thead>
-    <tr>
-        <th>ID</th>
-        <th>Título</th>
-        <th>Contenido</th>
-        <th>Fecha de creación</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th> <th>Título</th>
+            <th>Contenido</th>
+            <th>createdAt</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
         <tbody>
-        <tr th:each="note : ${notes}">
+        <tr th:each="note: ${notes}">
             <td th:text="${note.id}"></td>
+
+            <td th:text="${note.category?.name} ?: 'Sin Categoría'"
+                style="font-style: italic; color: #555;"></td>
+
             <td th:text="${note.title}"></td>
             <td th:text="${note.content}"></td>
             <td th:text="${note.createdAt}"></td>
-            <td> <a th:href="@{'/edit-note/' + ${note.id}}">Editar</a>
-            <td> <a th:href="@{'/delete-note-in-list/' + ${note.id}}">Borrar</a>
+            <td>
+                <a th:href="@{/edit-note/{id}(id=${note.id})}">Editar</a> |
+                <a th:href="@{/delete-note/{id}(id=${note.id})}">Borrar</a>
             </td>
         </tr>
         </tbody>
     </table>
+
     <p><a th:href="@{/}">Volver al menú</a></p>
 </body>
 </html>
