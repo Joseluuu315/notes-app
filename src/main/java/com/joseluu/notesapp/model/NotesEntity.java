@@ -8,51 +8,30 @@ import java.time.LocalDate;
 
 @Entity
 public class NotesEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Check(constraints = "LENGTH(title) >= 3")
     private String title;
+
     private String content;
     private LocalDate createdAt;
     private HttpStatus status;
+
+    // Nueva relación N:1 con Categoria
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    private CategoryEntity category;
+    @JoinColumn(name = "categoria_id")
+    private CategoryEntity categoria;
 
-
-
-
-    public CategoryEntity getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryEntity category) {
-        this.category = category;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getters y setters
     public Long getId() {
         return id;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -63,11 +42,35 @@ public class NotesEntity {
         this.title = title;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public HttpStatus getStatus() {
         return status;
     }
 
     public void setStatus(HttpStatus status) {
         this.status = status;
+    }
+
+    public CategoryEntity getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(CategoryEntity categoria) {
+        this.categoria = categoria;
     }
 }

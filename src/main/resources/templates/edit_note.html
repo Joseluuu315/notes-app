@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <title>Editar Nota</title>
     <meta charset="UTF-8">
@@ -13,6 +13,17 @@
 
     <label for="content">Contenido:</label>
     <textarea id="content" th:field="*{content}"></textarea><br><br>
+
+    <!-- SELECT para categoría -->
+    <label for="categoria">Categoría:</label>
+    <select id="categoria" th:field="*{categoria}">
+        <option th:each="cat : ${allCategorias}"
+                th:value="${cat.id}"
+                th:text="${cat.name}"
+                th:selected="${cat.id == note.categoria.id}">
+        </option>
+    </select>
+    <br><br>
 
     <button type="submit">Guardar Cambios</button>
 </form>

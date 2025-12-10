@@ -5,19 +5,31 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <h1>Añadir Nueva Nota</h1>
-    <form action="#" th:action="@{/create-note}" th:object="${note}" method="post">
-        <label for="title">Título:</label>
-        <input type="text" id="title" name="title" th:field="*{title}"/><br><br>
+<h1>Añadir Nueva Nota</h1>
 
-        <label for="content">Contenido:</label>
-        <textarea id="content" name="content" th:field="*{content}"></textarea><br><br>
+<form action="#" th:action="@{/create-note}" th:object="${note}" method="post">
+    <label for="title">Título:</label>
+    <input type="text" id="title" th:field="*{title}" /><br><br>
 
-        <label for="createdAt">Fecha de creación: </label>
-        <input type="date" id="createdAt" name="createdAt" th:field="*{createdAt}"></input><br><br>
+    <label for="content">Contenido:</label>
+    <textarea id="content" th:field="*{content}"></textarea><br><br>
 
-        <button type="submit">Guardar Nota</button>
-    </form>
-    <p><a th:href="@{/}">Volver al menú</a></p>
+    <label for="createdAt">Fecha de creación: </label>w
+    <input type="date" id="createdAt" th:field="*{createdAt}" /><br><br>
+
+    <!-- SELECT para categoría -->
+    <label for="categoria">Categoría:</label>
+    <select id="categoria" th:field="*{categoria}">
+        <option th:each="cat : ${allCategorias}"
+                th:value="${cat.id}"
+                th:text="${cat.name}">
+        </option>
+    </select>
+    <br><br>
+
+    <button type="submit">Guardar Nota</button>
+</form>
+
+<p><a th:href="@{/}">Volver al menú</a></p>
 </body>
 </html>
